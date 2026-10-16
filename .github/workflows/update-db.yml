@@ -1,0 +1,56 @@
+name: Update signature database
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 2 */2 * *'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch and verify upstream databases
+        run: |
+          chmod +x tools/*.sh
+          tools/fetch_upstream_db.sh out
+
+      - name: Compare with latest release
+        id: cmp
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          latest=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName -q .tagName 2>/dev/null || echo "")
+          new=$(python3 -c "import json;print(json.load(open('out/manifest.json'))['version'])")
+          if [ -n "$latest" ]; then
+            gh release download "$latest" --repo "$GITHUB_REPOSITORY" --pattern manifest.json --dir prev || true
+          fi
+          if [ -f prev/manifest.json ] && python3 - <<'PY'
+          import json,sys
+          a=json.load(open('prev/manifest.json'));b=json.load(open('out/manifest.json'))
+          sys.exit(0 if {f['name']:f['sha256'] for f in a['files']}=={f['name']:f['sha256'] for f in b['files']} else 1)
+          PY
+          then echo "changed=false" >> "$GITHUB_OUTPUT"; echo "No changes since $latest"
+          else echo "changed=true" >> "$GITHUB_OUTPUT"; echo "tag=$new" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Publish release
+        if: steps.cmp.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ steps.cmp.outputs.tag }}"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then tag="$tag-$(date -u +%H%M)"; fi
+          gh release create "$tag" out/manifest.json out/hypatia-md5-bloom.bin out/hypatia-sha1-bloom.bin out/hypatia-sha256-bloom.bin \
+            --repo "$GITHUB_REPOSITORY" --title "Signatures $tag" --notes "Automatic update from upstream. GPG verified." --latest
+
+      - name: Prune old releases (keep 20)
+        if: steps.cmp.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release list --repo "$GITHUB_REPOSITORY" --limit 200 --json tagName,createdAt -q 'sort_by(.createdAt) | reverse | .[20:] | .[].tagName' \
+            | while read -r t; do [ -n "$t" ] && gh release delete "$t" --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag; done
