@@ -27,7 +27,9 @@ TRANCO = "https://tranco-list.eu/top-1m.csv.zip"
 UA = {"User-Agent": "antivirus-link-db-builder/1.0"}
 # Self-test entries (like Hypatia's test signatures): harmless addresses under example.com/.org that are always
 # on the lists, so the app's link protection can be tried safely. See test-files/test-links.md.
-TEST_DOMAINS = {"shield-phishing-test.example.com"}
+# shield-blocked-test.127.0.0.1.nip.io really resolves (to the phone itself, 127.0.0.1), so it shows that Web
+# protection blocks a name that exists; example.com subdomains don't exist and fail even without protection.
+TEST_DOMAINS = {"shield-phishing-test.example.com", "shield-blocked-test.127.0.0.1.nip.io"}
 TEST_URLS = {"example.org/shield-malware-test.apk"}
 
 
