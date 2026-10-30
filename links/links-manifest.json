@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "version": "2026.10.30.1116",
-  "generated_at": "2026-10-30T11:16:33Z",
-  "domain_count": 393878,
+  "version": "2026.10.30.1215",
+  "generated_at": "2026-10-30T12:15:45Z",
+  "domain_count": 393879,
   "url_count": 103588,
   "sources": [
     "URLhaus (malware-filter mirror, CC0)",
@@ -11,8 +11,8 @@
   "files": [
     {
       "name": "link-domains.bin",
-      "size": 3151034,
-      "sha256": "8ff521ca9985b15c897f502387febc1992435b0e218b3a22d503965266ff4461"
+      "size": 3151042,
+      "sha256": "7128bee0438997fcb56b995eb52d9999e7a005b953fa3d9ef0613f68d990fbfb"
     },
     {
       "name": "link-urls.bin",
