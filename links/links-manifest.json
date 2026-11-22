@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "version": "2026.11.21.1055",
-  "generated_at": "2026-11-21T10:55:08Z",
-  "domain_count": 393959,
-  "url_count": 109327,
+  "version": "2026.11.22.1112",
+  "generated_at": "2026-11-22T11:12:45Z",
+  "domain_count": 393975,
+  "url_count": 109937,
   "sources": [
     "URLhaus (malware-filter mirror, CC0)",
     "Phishing.Database (MIT)"
@@ -11,13 +11,13 @@
   "files": [
     {
       "name": "link-domains.bin",
-      "size": 3151682,
-      "sha256": "1747c50f29d7e674a66e70d48fa7355a3da269d5b052bbdd6f0789f1425c88e0"
+      "size": 3151810,
+      "sha256": "16647209fd491320b741306007d8d0b3b959dab322642923da8f544dd5d19811"
     },
     {
       "name": "link-urls.bin",
-      "size": 874626,
-      "sha256": "5e1b570345e278b36c8ec237ac78711043e56119c8a59851773c5fcb7e90561c"
+      "size": 879506,
+      "sha256": "d5ffd153f07da18ea1984d82ec6823780236811e0a89287baa6ec9367f2bc447"
     }
   ]
 }
